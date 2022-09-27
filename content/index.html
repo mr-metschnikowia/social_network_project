@@ -2,11 +2,26 @@
 
 <html lang="en">
 <head>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="index.css">
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Network Project</title>
-    <script src="client.js"></script>
 </head>
 <body>
-    <h1>Social Network Project</h1>
+    <h1 id="network_logo">LevWork</h1>
+    <div id="login_portal">
+        <h1>Login Portal</h1>
+        <img :src="img" />
+        <form id="login form">
+            Username: <input />
+            Password: <input />
+        </form>
+        <button>Login</button>
+        <button>Register now!</button>
+        <button v-on:click="changeImage()">Change photo</button>
+    </div>
+    <script src="client.js"></script>
 </body>
 </html>

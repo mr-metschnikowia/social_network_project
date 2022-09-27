@@ -1,1 +1,1 @@
-Project: Develop a simple social network using Vue.js, Node.js and MongoDB Atlas.
+Project: A simple social network using Vue.js, Node.js and MongoDB Atlas.

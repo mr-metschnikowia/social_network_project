@@ -1,4 +1,3 @@
-//const mongoose = require('mongoose')
 const MongoClient = require('mongodb').MongoClient;
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -18,16 +17,18 @@ let usersCollection = null;
 const API_PORT = 3000;
 //defining global variables
 
+/// MongoDB Configuration ///
 const config = require('./config-db.js');
 // get MongoDB Atlas config file
 const url = `mongodb+srv://${config.username}:${config.password}@${config.cluster}.mongodb.net/${config.database}?retryWrites=true&w=majority`;
-const client = new MongoClient(url, { useUnifiedTopology: true });
 // build MongoDB Atlas connection string
+const client = new MongoClient(url, { useUnifiedTopology: true });
+// use connection string to initialise new mongo client 
 
 app.use(express.static('content'));
 // serve up static content from content directory
 
-//mongoose.connect(url, connectionParams)
+/// Connect to MongoDB Atlas Database ///
 client.connect()
     .then (conn => console.log('connection successful'))
     .catch(err => { console.log(`Could not connect to ${url.replace(/:([^:@]{1,})@/, ':****@')}`, err); throw err; })
@@ -37,7 +38,8 @@ client.connect()
     .catch(err => console.log(`collection not found`))
     // retrieve preexisting collections 
 
-    .then(() => console.log(usersCollection.find().toArray().then(docs => console.log(docs))))
+    //.then(() => console.log(usersCollection.find().toArray().then(docs => console.log(docs))))
+    .then(() => usersCollection.find().toArray().then(docs => console.log(docs)))
     // print users collection
 
     .then(() => app.listen(API_PORT, () => console.log(`Listening on localhost: ${API_PORT}`)))
