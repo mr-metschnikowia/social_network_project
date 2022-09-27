@@ -25,9 +25,6 @@ const url = `mongodb+srv://${config.username}:${config.password}@${config.cluste
 const client = new MongoClient(url, { useUnifiedTopology: true });
 // use connection string to initialise new mongo client 
 
-app.use(express.static('content'));
-// serve up static content from content directory
-
 /// Connect to MongoDB Atlas Database ///
 client.connect()
     .then (conn => console.log('connection successful'))
