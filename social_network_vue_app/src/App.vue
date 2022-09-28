@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import LoginPortal from './components/LoginPortal'
+import LoginPortal from './components/LoginPortal';
 
 export default {
   name: 'App',

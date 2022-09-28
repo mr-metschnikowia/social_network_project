@@ -5,11 +5,13 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "jest"
   },
   "dependencies": {
     "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "vue": "^3.2.13",
+    "vue-jest": "^5.0.0-alpha.10"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -39,5 +41,20 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-  ]
+  ],
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      ".*\\.(vue)$": "vue-jest",
+      ".*\\.(js)$": "babel-jest"
+    },
+    "modulePaths": [
+      "node_modules",
+      "src"
+    ]
+  }
 }

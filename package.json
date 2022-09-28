@@ -4,8 +4,8 @@
   "description": "A simple social network for geeks",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "jest"
   },
   "author": "Lev Gorbunov",
   "license": "ISC",

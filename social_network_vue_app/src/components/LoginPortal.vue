@@ -16,7 +16,7 @@
 export default {
     name: "LoginPortal",
     data() {
-        return { img: 'https://picsum.photos/500/300' }
+        return { img: 'https://picsum.photos/seed/${Math.random()}/500/300' }
     },
     methods: {
         changeImage() { this.img = `https://picsum.photos/seed/${Math.random()}/500/300`}

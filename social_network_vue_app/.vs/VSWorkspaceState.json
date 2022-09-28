@@ -3,8 +3,9 @@
     "",
     "\\public",
     "\\src",
-    "\\src\\components"
+    "\\src\\components",
+    "\\__tests__"
   ],
-  "SelectedNode": "\\src\\main.js",
+  "SelectedNode": "\\__tests__\\testSuite.test.js",
   "PreviewInSolutionExplorer": false
 }
