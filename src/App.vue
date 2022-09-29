@@ -1,25 +1,22 @@
 <template>
-    <h1 id="social_network_title">Welcome to LevBook</h1>
-    <LoginPortal />
+    <div class="container">
+        <AppHeader />
+    </div>
+    <router-view />
 </template>
 
 <script>
-import LoginPortal from './components/LoginPortal';
+import AppHeader from './components/AppHeader';
 
 export default {
   name: 'App',
   components: {
-      LoginPortal
+      AppHeader
   },
 }
 </script>
 
 <style>
-#social_network_title {
-    text-align: left;
-    margin-left: 50px;
-}
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
