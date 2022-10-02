@@ -43,10 +43,8 @@ export default {
             this.$emit('login-user', existingUser);
             // emit username and password
 
-            this.username = '';
-            this.password = '';
-            // clear username and password
-
+            this.username = "";
+            this.password = "";
         },
     }
 }
@@ -55,11 +53,6 @@ export default {
 <style scoped>
 body {
     text-align: center;
-}
-
-#network_logo {
-    text-align: left;
-    margin: 30px;
 }
 
 input {

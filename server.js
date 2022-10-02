@@ -61,6 +61,22 @@ app.post('/api/login', (req, res, next) => {
 // database: check if exists in user collection
 // response: success/failure
 
+app.post('/api/register', (req, res, next) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    const query = { username: username };
+    usersCollection.findOne(query)
+        .then(doc => {
+            if (doc) {
+                res.status(400).send("User already exists");
+            } else {
+                usersCollection.insertOne({ username: username, password: password })
+                .then(jsn => res.status(200).send());
+            }
+        })
+});
+// new user registration endpoint
+
 /// Connect to MongoDB Atlas Database ///
 client.connect()
     .then (conn => console.log('connection successful'))
