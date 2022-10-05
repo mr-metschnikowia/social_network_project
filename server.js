@@ -2,6 +2,9 @@ const MongoClient = require('mongodb').MongoClient;
 const express = require('express');
 const bodyParser = require('body-parser');
 var basicAuth = require('basic-auth');
+var hpp = require('hpp');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 // getting packages
 
 var app = express();
@@ -10,6 +13,17 @@ var app = express();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 // configure body-parser
+
+app.use(hpp());
+// use HPP to prevent parameter pollution attacks
+
+app.disable('x-powered-by');
+// disabled x-powered-by headers - to prevent hackers from getting server info
+
+dotenv.config();
+// bring environmental variables from .env files - they are added to process.env
+process.env.TOKEN_SECRET;
+// access environmental variables from process.env
 
 let usersCollection = null;
 // create collections
@@ -25,6 +39,25 @@ const url = `mongodb+srv://${config.username}:${config.password}@${config.cluste
 const client = new MongoClient(url, { useUnifiedTopology: true });
 // use connection string to initialise new mongo client 
 
+function generateAccessToken(username) {
+    return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+}
+// function to generate JWT access token based on username and server's secret key, expires in 30min
+
+const validateUser = (req, res, next) => {
+    try {
+        if (req.body.username.length < 1 || req.body.password.length < 1) {
+            return  res.status(400).send("Invalid username or password!");
+        }
+        // checks if username and password exist and if they are valid
+    } catch (err) {
+        return res.status(400).send("Invalid username or password!");
+    }
+
+    next()
+}
+// validates user details upon registration
+
 app.use((req, res, next) => {
 
     // Website you wish to allow to connect
@@ -39,6 +72,7 @@ app.use((req, res, next) => {
     // Pass to next layer of middleware
     next();
 });
+// allows CORS, as Vue and Node servers hosted on different ports of same machine
 
 app.post('/api/login', (req, res, next) => {
     const username = req.body.username;
@@ -61,7 +95,7 @@ app.post('/api/login', (req, res, next) => {
 // database: check if exists in user collection
 // response: success/failure
 
-app.post('/api/register', (req, res, next) => {
+app.post('/api/register', validateUser, (req, res, next) => {
     const username = req.body.username;
     const password = req.body.password;
     const query = { username: username };
