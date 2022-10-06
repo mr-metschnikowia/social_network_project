@@ -13,8 +13,16 @@
                         method: "POST",
                         headers: { 'Content-type': 'application/json', "Authorization": document.cookie.slice(6) },
                     })
-                        .then(res => res.text())
-                        .then(data => alert(data))
+                        .then(res => {
+
+                            if (res.status === 401) {
+                                window.location.href = "http://localhost:8080/";
+                            }
+
+                            return res.text()
+                        })
+                        .then(text => alert(text))
+
                 } catch (err) {
                     alert(err);
                 }

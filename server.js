@@ -60,7 +60,7 @@ function authenticateToken(req, res, next) {
         // attach decrypted username to request
     } catch (err) {
         console.log(err);
-        return res.send("Authentication failed!");
+        return res.status(401).send("Authentication failed!");
     }
 
     next();
