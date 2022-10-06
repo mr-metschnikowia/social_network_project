@@ -5,6 +5,7 @@ var basicAuth = require('basic-auth');
 var hpp = require('hpp');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const cors = require("cors");
 // getting packages
 
 var app = express();
@@ -13,6 +14,9 @@ var app = express();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 // configure body-parser
+
+app.use(cors());
+// allow cors requests
 
 app.use(hpp());
 // use HPP to prevent parameter pollution attacks
@@ -44,6 +48,30 @@ function generateAccessToken(username) {
 }
 // function to generate JWT access token based on username and server's secret key, expires in 30min
 
+function authenticateToken(req, res, next) {
+    try {
+        const token = req.headers['authorization'];
+        // check if valid header included
+
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+        // verify access token 
+
+        req.userTokenDeets = decoded;
+        // attach decrypted username to request
+    } catch (err) {
+        console.log(err);
+        return res.send("Authentication failed!");
+    }
+
+    next();
+}
+// JWT token authentication middleware
+
+app.post("/api/authentication-test", authenticateToken, (req, res, next) => {
+    res.send(`${req.userTokenDeets.username} authenticated successfully`);
+})
+// JWT authentication test
+
 const validateUser = (req, res, next) => {
     try {
         if (req.body.username.length < 1 || req.body.password.length < 1) {
@@ -67,12 +95,12 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization');
 
     // Pass to next layer of middleware
     next();
 });
-// allows CORS, as Vue and Node servers hosted on different ports of same machine
+// CORS settings, as Vue and Node servers hosted on different ports of same machine
 
 app.post('/api/login', (req, res, next) => {
     const username = req.body.username;
@@ -83,7 +111,10 @@ app.post('/api/login', (req, res, next) => {
     usersCollection.findOne(query)
         .then(doc => {
             if (doc) {
-                res.status(200).send();
+                const token = generateAccessToken({ username: req.body.username });
+                // generate JWT token
+                res.status(200).json(token);
+                // send token to user
             } else {
                 res.status(400).send("Username or password incorrect!");
             }

@@ -25,11 +25,13 @@ export default {
          // http post request made using fetch api
          // data: username and password data
          .then(res => {
-            if (res.status === 200) {
+             if (res.status === 200) {
+                res.json().then(data => document.cookie = `token=${data}`)
+                // get JWT token from response and create a cookie for the token
                 window.location.href = "http://localhost:8080/home";
                 // if login is successful, send user to their homepage
             } else {
-                res.text().then(text => alert(text))
+                 res.text().then(text => alert(text));
             }
          })
          // handle response
