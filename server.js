@@ -53,19 +53,42 @@ function authenticateToken(req, res, next) {
         const token = req.headers['authorization'];
         // check if valid header included
 
-        const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+        if (token.length < 1) {
+            return res.status(401);
+        }
+        // handles cases when JWT access token is missing - other methods of handling this method failed
+
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
         // verify access token 
 
         req.userTokenDeets = decoded;
         // attach decrypted username to request
+
     } catch (err) {
         console.log(err);
-        return res.status(401).send("Authentication failed!");
+        return res.status(401);
     }
 
     next();
 }
 // JWT token authentication middleware
+
+function getProfilePhoto(req, res, next) {
+    const username = req.userTokenDeets.username;
+    client.db().collection('profilePics').findOne({ username: username })
+        .then(doc => {
+            if (doc === null) {
+                res.status(400).json({ username: "", photo: "" });
+            }
+            else {
+                res.status(200).json(doc);
+            }
+        })
+}
+// function to return user profile photo and username
+
+app.get("/api/getProfilePhoto", authenticateToken, getProfilePhoto);
+// get profile photo endpoint
 
 app.post("/api/authentication-test", authenticateToken, (req, res, next) => {
     res.send(`${req.userTokenDeets.username} authenticated successfully`);
@@ -151,10 +174,6 @@ client.connect()
     .then(conn => usersCollection = client.db().collection('users'))
     .catch(err => console.log(`collection not found`))
     // retrieve preexisting collections 
-
-    .then(() => usersCollection.find().toArray().then(docs => console.log(docs)))
-    .catch(err => console.log("cannot print collection"))
-    // print users collection
 
     .then(() => app.listen(API_PORT, () => console.log(`Listening on localhost: ${API_PORT}`)))
     .catch(err => console.log(`Could not start server`, err))
