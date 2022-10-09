@@ -1,4 +1,4 @@
-A generic social network, built using Node.js and Vue.js.
+A generic social network, built using vue/Node/MongoDB Atlas.
 
 Features:
 - CRUD application
