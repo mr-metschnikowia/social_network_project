@@ -1,6 +1,8 @@
 <template>
-    <img :src="image"/>
-    <h3>{{username}}</h3>
+    <div id="profilePhoto">
+        <img :src="image"/>
+        <h3>{{username}}</h3>
+    </div>
 </template>
 
 <script>
