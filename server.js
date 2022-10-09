@@ -73,6 +73,20 @@ function authenticateToken(req, res, next) {
 }
 // JWT token authentication middleware
 
+function getUsers(req, res, next) {
+    const query = req.params.QUERY;
+    const regex = new RegExp(`^${query}`, "i");
+    // make regex from query
+    client.db().collection('profilePics').find({ username: regex }).toArray()
+        // query database using regex and return array of results 
+        .then(docs => {
+            if (docs != null) { res.json(docs); }
+            else { res.json([]) };
+        })
+        .catch(() => console.log("error finding docs"))
+}
+// get users - gets all users and their profile photos
+
 function getProfilePhoto(req, res, next) {
     const username = req.userTokenDeets.username;
     client.db().collection('profilePics').findOne({ username: username })
@@ -86,6 +100,8 @@ function getProfilePhoto(req, res, next) {
         })
 }
 // function to return user profile photo and username
+
+app.get("/api/getUsers/:QUERY", authenticateToken, getUsers);
 
 app.get("/api/getProfilePhoto", authenticateToken, getProfilePhoto);
 // get profile photo endpoint
