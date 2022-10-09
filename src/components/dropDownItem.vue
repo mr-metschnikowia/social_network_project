@@ -1,6 +1,6 @@
 <template>
 	<div id="dropDownItem">
-		<img class="dropDownItemComponent" :src="user.photo"/>
+		<img class="dropDownItemComponent profilePhoto" :src="user.photo"/>
 		<p class="dropDownItemComponent">{{user.username}}</p>
 	</div>
 </template>
@@ -17,13 +17,28 @@
 </script>
 
 <style scoped>
+	#dropDownItem {
+		position: relative;
+		align-content: left;
+		padding: 40px;
+	}
+
 	.dropDownItemComponent {
 		display: inline;
 	}
 
-	img {
+	p {
+		position: absolute;
+		bottom: 15px;
+		left: 150px;
+	}
+
+	.profilePhoto {
         height: 50px;
         width: 50px;
 		margin: 10px;
+		position: absolute;
+		bottom: 5px;
+		left: 30px;
     }
 </style>

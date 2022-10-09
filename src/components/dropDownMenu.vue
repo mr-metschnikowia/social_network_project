@@ -42,19 +42,15 @@
 
 <style scoped>
 
-#myDropdown {
-	width: 700px;
-	display: inline-block;
-}
 
 #search-bar {
-	width: 100%;	
+	width: 700px;
+	padding: 20px;
 }
 
 .dropdown-content {
 	background-color: #f6f6f6;
 	border: 1px solid #ddd;
-	width: 100%;
 }
 
 </style>

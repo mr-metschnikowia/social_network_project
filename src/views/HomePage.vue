@@ -1,8 +1,8 @@
 <template>
     <div id="top-panel">
-        <profilePhoto :image="profilePic"
+        <profilePhoto class="miniProfile" :image="profilePic"
                       :username="username" />
-        <dropDownMenu :users="users"
+        <dropDownMenu class="dropDownMenu" :users="users"
                       @submit-query="userSearch" />
         <!--submit-query event emitted from dropDownMenu element is caught and the userSearch function is triggered
         ; the information sent with the submit-query event is passed to the triggered function as an argument
@@ -80,6 +80,20 @@
 
 <style>
     #top-panel {
-        display: inline;
+        position: relative;
+        border-bottom: solid;
+        top: 150px;
+    }
+
+    .dropDownMenu {
+        position: absolute;
+        left: 550px;
+        top: -175px;
+    }
+
+    .miniProfile {
+        position: absolute;
+        top: -200px;
+        left: 1500px;
     }
 </style>
