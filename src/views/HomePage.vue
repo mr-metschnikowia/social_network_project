@@ -8,11 +8,17 @@
         ; the information sent with the submit-query event is passed to the triggered function as an argument
         -->
     </div>
+    <div id="bottom-panel">
+        <createPostForm class="createPostForm" :style="{visibility: createPost ? 'visible' : 'hidden'}" @submit-Post="hideCreatePostForm"/>
+        <createPostButton class="createPostButton" @create-post="showCreatePostForm" />
+    </div>
 </template>
 
 <script>
     import profilePhoto from "../components/profilePhoto";
     import dropDownMenu from "../components/dropDownMenu";
+    import createPostButton from "../components/createPostButton";
+    import createPostForm from "../components/createPostForm";
     // importing necessary components
 
     export default {
@@ -20,6 +26,8 @@
         components: {
             profilePhoto,
             dropDownMenu,
+            createPostButton,
+            createPostForm,
         },
         // defining components used
         data() {
@@ -27,10 +35,17 @@
                 username: "",
                 profilePic: "",
                 users: [],
+                createPost: false,
             }
         },
         // component props are associated with vue data stored here and manipulated by methods (use props instead?)
         methods: {
+            hideCreatePostForm() {
+                this.createPost = false;
+            },
+            showCreatePostForm() {
+                this.createPost = true;
+            },
             async getProfilePic() {
                 try {
                     await fetch("http://localhost:3000/api/getProfilePhoto", {
@@ -90,7 +105,7 @@
 
     .dropDownMenu {
         position: absolute;
-        left: 550px;
+        left: 520px;
         top: -175px;
     }
 
@@ -98,5 +113,22 @@
         position: absolute;
         top: -200px;
         left: 1500px;
+    }
+
+    #bottom-panel {
+        position: relative;
+        top: 700px;
+    }
+
+    .createPostButton {
+        position: absolute;
+        bottom: 50px;
+        right: 150px;
+    }
+
+    .createPostForm {
+        position: absolute;
+        bottom: 50px;
+        left: 500px;
     }
 </style>
