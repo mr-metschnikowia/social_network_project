@@ -2,6 +2,7 @@
     <div id="profilePhoto">
         <img :src="image"/>
         <h3>{{username}}</h3>
+        <router-link id="profile-link" to="/profile">View Profile</router-link>
     </div>
 </template>
 
@@ -19,7 +20,15 @@
 </script>
 
 <style scoped>
+    #profile-link {
+        font-weight: bold;
+        font-size: 15px;
+        text-decoration: none;
+        color: darkblue;
+    }
+
     img {
+        border-radius: 100px;
         height: 100px;
         width: 100px;
     }

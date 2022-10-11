@@ -127,7 +127,7 @@
 
     .miniProfile {
         position: absolute;
-        top: -200px;
+        top: -230px;
         left: 1500px;
     }
 
