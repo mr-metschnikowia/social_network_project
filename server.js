@@ -87,6 +87,34 @@ function getUsers(req, res, next) {
 }
 // get users - gets all users and their profile photos
 
+function validatePost(reqBody, username) {
+    if (!reqBody.title || reqBody.title.length < 1) {
+        throw new Error("Post is missing title!");
+        //res.status(400).send("Post is missing title!");
+        //return
+    // check post title
+    } else if (!reqBody.content || reqBody.content.length < 1) {
+        throw new Error("Post is missing content!");
+        //res.status(400).send("Post is missing content!");
+        //return 
+    }
+    // check post content
+
+    return { username: username, title: reqBody.title, content: reqBody.content }
+    // return post object
+}
+// function checks if post is in correct format
+
+function createPost(req, res, next) {
+    const post = validatePost(req.body, req.userTokenDeets.username);
+    // create post document
+    client.db().collection("posts").insertOne(post)
+        .then(() => res.status(200).send("Post created successfully!"))
+        .catch((err) => res.status(400).send("Failed to create post!"))
+    // insert post into collection and handle result 
+}
+// function to create new post
+
 function getProfilePhoto(req, res, next) {
     const username = req.userTokenDeets.username;
     client.db().collection('profilePics').findOne({ username: username })
@@ -101,7 +129,10 @@ function getProfilePhoto(req, res, next) {
 }
 // function to return user profile photo and username
 
+app.post("/api/createPost", authenticateToken, createPost);
+
 app.get("/api/getUsers/:QUERY", authenticateToken, getUsers);
+// get users for search bar endpoint
 
 app.get("/api/getProfilePhoto", authenticateToken, getProfilePhoto);
 // get profile photo endpoint

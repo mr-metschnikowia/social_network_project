@@ -9,7 +9,7 @@
         -->
     </div>
     <div id="bottom-panel">
-        <createPostForm class="createPostForm" :style="{visibility: createPost ? 'visible' : 'hidden'}" @submit-Post="hideCreatePostForm"/>
+        <createPostForm class="createPostForm" :style="{visibility: createPost ? 'visible' : 'hidden'}" @submit-Post="createPostFunction"/>
         <createPostButton class="createPostButton" @create-post="showCreatePostForm" />
     </div>
 </template>
@@ -40,11 +40,27 @@
         },
         // component props are associated with vue data stored here and manipulated by methods (use props instead?)
         methods: {
-            hideCreatePostForm() {
-                this.createPost = false;
+            async createPostFunction(post) {
+                try {
+                    await fetch("http://localhost:3000/api/createPost", {
+                        method: "POST",
+                        headers: { 'Content-type': 'application/json', "Authorization": document.cookie.slice(6) },
+                        body: JSON.stringify(post),
+                    })
+                        .then(res => res.text())
+                        .then(text => {
+                            alert(text);
+                            this.createPost = false;
+                            // remove create post form from UI
+                        })
+                    // make fetch request with post details in it
+                } catch (err) {
+                    alert("Create post fetch request failed");
+                }
             },
             showCreatePostForm() {
                 this.createPost = true;
+                // show create post form
             },
             async getProfilePic() {
                 try {

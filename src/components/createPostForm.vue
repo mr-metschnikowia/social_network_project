@@ -1,9 +1,9 @@
 <template>
     <form id="createPostForm">
         <h3>Post Title</h3>
-        <input type="text" v-model="postTitle" />
+        <input id="post-title" class="form-input" type="text" v-model="postTitle" />
         <h3>Post Content</h3>
-        <input id="post-content" type="text" v-model="postContent" />
+        <textarea id="post-content" class="form-input" type="text" v-model="postContent" />
         <button @click="submitPost">Submit Post</button>
     </form>
 </template>
@@ -19,7 +19,7 @@
         },
         methods: {
             submitPost() {
-                this.$emit("submit-post");
+                this.$emit("submit-post", { title: this.postTitle, content: this.postContent });
             }
         }
     }
@@ -34,9 +34,8 @@
         width: 700px;
     }
 
-    input {
+    .form-input {
         width: 100%;
-        height: 30px;
     }
 
     button {
@@ -45,6 +44,11 @@
         padding: 15px;
         width: 120px;
         left: 590px;
+    }
+
+    #post-title {
+        padding: 5px;
+        height: 30px;
     }
 
     #post-content {
