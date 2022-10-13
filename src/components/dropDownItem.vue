@@ -1,5 +1,5 @@
 <template>
-	<div id="dropDownItem">
+	<div @click="toProfilePage" id="dropDownItem">
 		<img class="dropDownItemComponent profilePhoto" :src="user.photo"/>
 		<p class="dropDownItemComponent">{{user.username}}</p>
 	</div>
@@ -12,6 +12,12 @@
 		props: {
 			user: Object,
 		},
+		methods: {
+			toProfilePage() {
+				window.location.href = "http://localhost:8080/profile";
+				// click on dropdown menu item to be redirected to profile page
+			},
+		}
 	}
 	// dropdown menu item component, user photo and user name are props which will be assigned values based on database query
 </script>

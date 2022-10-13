@@ -1,23 +1,32 @@
 <template>
     <div id="main-profile">
-    <profileMain 
-        :profilePhoto="profilePhoto"
-        :username="username"
-        :about="about"
-    />
+        <profileMain 
+            :profilePhoto="profilePhoto"
+            :username="username"
+            :about="about"
+            :backgroundPhoto="backgroundPhoto"
+            @show-edit-profile-form="showEditProfileForm"
+        />
+        <editProfileForm 
+            @update-profile="updateProfile"
+            :style="{visibility: editProfile ? 'visible' : 'hidden'}" 
+        />
     </div>
 </template>
 
 <script>
     import profileMain from "../components/profileMain"
+    import editProfileForm from "../components/editProfileForm"
 
     export default {
         name: "ProfilePage",
         components: {
             profileMain,
+            editProfileForm,
         },
         data() {
             return {
+                editProfile: false,
                 profilePhoto: "",
                 backgroundPhoto: "",
                 username: "",
@@ -25,10 +34,27 @@
             }
         },
         methods: {
-            getUserDeets() {
-                this.profilePhoto = "https://play-lh.googleusercontent.com/i1qvljmS0nE43vtDhNKeGYtNlujcFxq72WAsyD2htUHOac57Z9Oiew0FrpGKlEehOvo=w240-h480-rw";
-                this.username = "Bobby";
-                this.about = "Hello my name is random Bobby!\nI like curry!";
+            showEditProfileForm() {
+                this.editProfile = true;
+            },
+            updateProfile() {
+                this.editProfile = false;
+                alert("updateProfile called successfully");
+            },
+            async getUserDeets() {
+                await fetch(`http://localhost:3000/api/getMyProfile`, {
+                    method: "GET",
+                    headers: { "Authorization": document.cookie.slice(6) },
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        this.profilePhoto = data.profilePhoto;
+                        this.username = data.username;
+                        this.about = data.about;
+                        this.backgroundPhoto = data.backgroundPhoto;
+                    })
+                // fetch request to get profile detils of specific user from database
+                // where to get username from?
             },
         },
         beforeMount() {
@@ -36,6 +62,3 @@
         },
     }
 </script>
-
-<style scoped>
-</style>

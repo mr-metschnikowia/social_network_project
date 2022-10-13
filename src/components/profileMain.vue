@@ -1,6 +1,7 @@
 <template>
-    <div id="cool-div">
+    <div id="cool-div" v-bind:style="{ backgroundImage: 'url(' + backgroundPhoto + ')' }">
         <img id="profile-photo" :src="profilePhoto" />
+        <img id="edit-profile-icon" @click="showEditProfileForm" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBUrbYkAXIGvMURWnUldPEUbRHrmOV14Yj84gc93PcSSAfbO99iQP1R9SxbZZHnaV9mb4&usqp=CAU"/>
         <h3 id="user-label">{{username}}</h3>
     </div>
     <div id="about-div">
@@ -17,11 +18,26 @@
             backgroundPhoto: String,
             username: String,
             about: String,
-        }
+        },
+        methods: {
+            showEditProfileForm() {
+                this.$emit("show-edit-profile-form");
+            }
+        },
     }
 </script>
 
 <style scoped>
+    #edit-profile-icon {
+        border-radius: 100%;
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        top: 192px;
+        left: 920px;
+        border: solid 2px white;
+    }
+
     #about-div {
         position: relative;
     }
@@ -45,7 +61,6 @@
         height: 400px;
         background-size: 100% 100%;
         background-repeat: no-repeat;
-        background-image: url('https://wallpapers.com/images/hd/nature-landscape-go05oyj577mpbz7b.jpg');
     }
 
     #user-label {
