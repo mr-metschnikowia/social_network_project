@@ -1,6 +1,5 @@
-A generic social network, built using Vue/Node/MongoDB Atlas.
+Social network CRUD web application, built using MEVN stack (MongoDB/Express.js/Vue.js/Node.js).
 
 Features:
-- CRUD application
-- Jest is used for unit-testing
+- Jest unit-testing
 - JWT user authentication
