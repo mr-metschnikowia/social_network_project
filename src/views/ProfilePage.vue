@@ -37,9 +37,19 @@
             showEditProfileForm() {
                 this.editProfile = true;
             },
-            updateProfile() {
-                this.editProfile = false;
-                alert("updateProfile called successfully");
+            async updateProfile(newProfile) {
+                await fetch("http://localhost:3000/api/updateMyProfile", {
+                      method: "POST",
+                      headers: { 'Content-type': 'application/json', "Authorization": document.cookie.slice(6) },
+                      body: JSON.stringify(newProfile),
+                })
+                      .then(res => res.text())
+                      .then(text => {
+                          alert(text);
+                          this.editProfile = false;
+                          // remove edit profile form from page
+                      })
+                      // send new profile data to server
             },
             async getUserDeets() {
                 await fetch(`http://localhost:3000/api/getMyProfile`, {
