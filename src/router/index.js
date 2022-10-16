@@ -24,6 +24,7 @@ const routes = [
         path: '/profile',
         name: 'ProfilePage',
         component: ProfilePage,
+        props: true,
     },
 ]
 

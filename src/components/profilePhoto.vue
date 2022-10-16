@@ -1,8 +1,11 @@
 <template>
     <div id="profilePhoto">
-        <img :src="image"/>
+        <img :src="image" />
         <h3>{{username}}</h3>
-        <router-link id="profile-link" to="/profile">View Profile</router-link>
+        <router-link :to="{ name: 'ProfilePage', params: { usernameProp: username }}"
+                     id="profile-link">
+            View Profile
+        </router-link>
     </div>
 </template>
 

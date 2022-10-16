@@ -1,7 +1,12 @@
 <template>
     <div id="cool-div" v-bind:style="{ backgroundImage: 'url(' + backgroundPhoto + ')' }">
         <img id="profile-photo" :src="profilePhoto" />
-        <img id="edit-profile-icon" @click="showEditProfileForm" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBUrbYkAXIGvMURWnUldPEUbRHrmOV14Yj84gc93PcSSAfbO99iQP1R9SxbZZHnaV9mb4&usqp=CAU"/>
+        <img 
+            :style="{visibility: yourAccount ? 'visible' : 'hidden'}"
+            id="edit-profile-icon" 
+            @click="showEditProfileForm" 
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBUrbYkAXIGvMURWnUldPEUbRHrmOV14Yj84gc93PcSSAfbO99iQP1R9SxbZZHnaV9mb4&usqp=CAU"
+        />
         <h3 id="user-label">{{username}}</h3>
     </div>
     <div id="about-div">
@@ -18,6 +23,8 @@
             backgroundPhoto: String,
             username: String,
             about: String,
+            yourAccount: Boolean,
+            // only show edit profile UI if account is of logged in user
         },
         methods: {
             showEditProfileForm() {

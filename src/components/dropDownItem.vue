@@ -1,23 +1,22 @@
 <template>
-	<div @click="toProfilePage" id="dropDownItem">
-		<img class="dropDownItemComponent profilePhoto" :src="user.photo"/>
-		<p class="dropDownItemComponent">{{user.username}}</p>
+	<div id="dropDownItem">
+		<img class="dropDownItemComponent profilePhoto" :src="user.photo" />
+		<router-link 
+			:to="{ name: 'ProfilePage', params: { usernameProp: user.username }}"
+			class="dropDownItemComponent"
+		>
+			{{user.username}}
+		</router-link>
+		<!--username is sent to profile page through router link-->
 	</div>
 </template>
 
 <script>
-
-		export default {
+	export default {
 		name: "dropDownItem",
 		props: {
 			user: Object,
 		},
-		methods: {
-			toProfilePage() {
-				window.location.href = "http://localhost:8080/profile";
-				// click on dropdown menu item to be redirected to profile page
-			},
-		}
 	}
 	// dropdown menu item component, user photo and user name are props which will be assigned values based on database query
 </script>

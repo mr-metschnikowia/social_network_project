@@ -44,7 +44,7 @@
                 try {
                     await fetch("http://localhost:3000/api/createPost", {
                         method: "POST",
-                        headers: { 'Content-type': 'application/json', "Authorization": document.cookie.slice(6) },
+                        headers: { 'Content-type': 'application/json', "Authorization": document.cookie },
                         body: JSON.stringify(post),
                     })
                         .then(res => res.text())
@@ -66,7 +66,7 @@
                 try {
                     await fetch("http://localhost:3000/api/getProfilePhoto", {
                         method: "GET",
-                        headers: { "Authorization": document.cookie.slice(6) },
+                        headers: { "Authorization": document.cookie },
                     })
                         .then(res => {
 
@@ -96,7 +96,7 @@
                 
                 fetch(`http://localhost:3000/api/getUsers/${query.length > 0 ? query : null}`, {
                     method: "GET",
-                    headers: { "Authorization": document.cookie.slice(6) }
+                    headers: { "Authorization": document.cookie }
                 })
                     .then(res => res.json())
                     .then(data => {
