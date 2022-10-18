@@ -3,12 +3,14 @@
         <profileMain 
             :profilePhoto="profilePhoto"
             :username="username"
-            :about="about"
             :backgroundPhoto="backgroundPhoto"
             :yourAccount ="yourAccount"
             :followerCount ="followerCount"
             @show-edit-profile-form="showEditProfileForm"
             @follow-user="followUser"
+        />
+        <profileTabs
+            :about="about"
         />
         <editProfileForm 
             @update-profile="updateProfile"
@@ -20,12 +22,14 @@
 <script>
     import profileMain from "../components/profileMain"
     import editProfileForm from "../components/editProfileForm"
+    import profileTabs from "../components/profileTabs"
 
     export default {
         name: "ProfilePage",
         components: {
             profileMain,
             editProfileForm,
+            profileTabs,
         },
         props: {
             usernameProp: String,

@@ -12,8 +12,6 @@
     <div id="about-div">
         <p id="follower-count">{{followerCount}} following</p>
         <button @click="follow" id="follow-button" :style="{visibility: yourAccount ? 'hidden' : 'visible'}">+ Follow</button>
-        <h3 id="about-title">About</h3>
-        <p id="about-content">{{about}}</p>
     </div>
 </template>
 
@@ -26,7 +24,6 @@
             profilePhoto: String,
             backgroundPhoto: String,
             username: String,
-            about: String,
             yourAccount: Boolean,
             // only show edit profile UI if account is of logged in user
         },
@@ -85,20 +82,6 @@
 
     #about-div {
         position: relative;
-    }
-
-    #about-title {
-        position: absolute;
-        left: 100px;
-        top: 30px;
-        font-size: 50px;
-    }
-
-    #about-content {
-        font-weight: bold;
-        position: absolute;
-        left: 100px;
-        top: 200px;
     }
 
     #cool-div {
