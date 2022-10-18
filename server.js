@@ -53,7 +53,6 @@ function authenticateToken(req, res, next) {
         const startOfToken = cookie.indexOf("token") > -1 ? cookie.indexOf("token") + 6 : 0;
         const endOfToken = cookie.indexOf("userProfile") > -1 ? cookie.indexOf("userProfile") : cookie.length;
         const token = cookie.slice(startOfToken, endOfToken);
-        console.log(token);
         // extract JWT token from cookie
 
         if (token.length < 1) {
@@ -178,7 +177,26 @@ function getProfilePhoto(req, res, next) {
 }
 // function to return user profile photo and username
 
+function followUser(req, res, next) {
+    const loggedInUser = req.userTokenDeets.username;
+    const userToFollow = req.params.USER;
+    const query = { user: loggedInUser, following: userToFollow }
+    client.db().collection("followers").findOne(query)
+        .then(doc => {
+            if (doc === null) {
+                client.db().collection("followers").insertOne(query);
+                res.status(200).send(`Following ${userToFollow}`);
+            } else {
+                res.status(400).send(`You already follow ${userToFollow}`)
+            }
+        })
+}
+// function checks if logged in user is already following user, if no, logged in user: user key-value pair is inserted into db
+
 /// Endpoints ///
+
+app.get("/api/followUser/:USER", authenticateToken, followUser);
+// follow specified user endpoint
 
 app.get("/api/getUserProfile/:USER", authenticateToken, getUserProfile);
 // get profile of specified user

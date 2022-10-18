@@ -7,6 +7,7 @@
             :backgroundPhoto="backgroundPhoto"
             :yourAccount ="yourAccount"
             @show-edit-profile-form="showEditProfileForm"
+            @follow-user="followUser"
         />
         <editProfileForm 
             @update-profile="updateProfile"
@@ -41,6 +42,14 @@
             }
         },
         methods: {
+            followUser(userData) {
+                fetch(`http://localhost:3000/api/followUser/${userData.username}`, {
+                    method: "GET",
+                    headers: { "Authorization": document.cookie.slice(6) },
+                })
+                    .then(res => res.text())
+                    .then(text => alert(text))
+            },
             showEditProfileForm() {
                 this.editProfile = true;
             },
@@ -70,8 +79,6 @@
             // cookie is only reset on first visit to particular profile, when usernameProp is not undefined
             ,
             async getUserDeets() {
-                console.log("username: " + this.username);
-                console.log("usernameProp: " + this.usernameProp);
                 const username = document.cookie.slice(document.cookie.indexOf("userProfile") + 12);
                 // get username of interest from cookie
                 await fetch(`http://localhost:3000/api/getUserProfile/${username}`, {

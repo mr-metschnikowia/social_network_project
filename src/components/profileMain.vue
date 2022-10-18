@@ -10,12 +10,14 @@
         <h3 id="user-label">{{username}}</h3>
     </div>
     <div id="about-div">
+        <button @click="follow" id="follow-button" :style="{visibility: yourAccount ? 'hidden' : 'visible'}">+ Follow</button>
         <h3 id="about-title">About</h3>
         <p id="about-content">{{about}}</p>
     </div>
 </template>
 
 <script>
+
     export default {
         name: "profileMain",
         props: {
@@ -29,12 +31,37 @@
         methods: {
             showEditProfileForm() {
                 this.$emit("show-edit-profile-form");
-            }
+            },
+            follow() {
+                const userData = { username: this.username }
+                this.$emit("follow-user", userData);
+            },
         },
     }
 </script>
 
 <style scoped>
+    #follow-button {
+        position: absolute;
+        right: 80px;
+        top: 50px;
+        border: none;
+        width: 120px;
+        height: 50px;
+        padding: 10px;
+        background-color: darkgreen;
+        color: white;
+        border-radius: 15px;
+        box-shadow: 0 0 8px rgb(207, 207, 207);
+    }
+
+    #follow-button:hover {
+        border: none;
+        padding: 15px;
+        border-radius: 15px;
+        box-shadow: inset 0 0 8px #f9f8fc;
+    } 
+
     #edit-profile-icon {
         border-radius: 100%;
         height: 30px;
