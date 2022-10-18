@@ -6,6 +6,7 @@
             :about="about"
             :backgroundPhoto="backgroundPhoto"
             :yourAccount ="yourAccount"
+            :followerCount ="followerCount"
             @show-edit-profile-form="showEditProfileForm"
             @follow-user="followUser"
         />
@@ -32,6 +33,7 @@
         },
         data() {
             return {
+                followerCount: 0,
                 editProfile: false,
                 profilePhoto: "",
                 backgroundPhoto: "",
@@ -42,6 +44,15 @@
             }
         },
         methods: {
+            getFollowerCount() {
+                const username = document.cookie.slice(document.cookie.indexOf("userProfile") + 12);
+                fetch(`http://localhost:3000/api/getFollowerCount/${username}`, {
+                    method: "GET",
+                    headers: { "Authorization": document.cookie.slice(6) },
+                })
+                    .then(res => res.json())
+                    .then(data => this.followerCount = data.followerCount)
+            },
             followUser(userData) {
                 fetch(`http://localhost:3000/api/followUser/${userData.username}`, {
                     method: "GET",
@@ -100,6 +111,7 @@
         beforeMount() {
             this.createProfileCookie();
             this.getUserDeets();
+            this.getFollowerCount();
         },
     }
 </script>

@@ -10,6 +10,7 @@
         <h3 id="user-label">{{username}}</h3>
     </div>
     <div id="about-div">
+        <p id="follower-count">{{followerCount}} following</p>
         <button @click="follow" id="follow-button" :style="{visibility: yourAccount ? 'hidden' : 'visible'}">+ Follow</button>
         <h3 id="about-title">About</h3>
         <p id="about-content">{{about}}</p>
@@ -21,6 +22,7 @@
     export default {
         name: "profileMain",
         props: {
+            followerCount: Number, 
             profilePhoto: String,
             backgroundPhoto: String,
             username: String,
@@ -41,10 +43,19 @@
 </script>
 
 <style scoped>
+    #follower-count {
+        position: absolute;
+        right: 95px;
+        top: 40px;
+        font-weight: bold;
+        font-size: 15px;
+        color: darkgreen;
+    }
+
     #follow-button {
         position: absolute;
         right: 80px;
-        top: 50px;
+        top: 100px;
         border: none;
         width: 120px;
         height: 50px;

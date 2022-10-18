@@ -193,7 +193,18 @@ function followUser(req, res, next) {
 }
 // function checks if logged in user is already following user, if no, logged in user: user key-value pair is inserted into db
 
+async function getFollowerCount(req, res, next) {
+    const username = req.params.USER;
+    const query = { following: username };
+    await client.db().collection("followers").countDocuments(query)
+        .then(count => res.json({ followerCount: count }))
+}
+// function counts number of documents in followers collection where following === username
+
 /// Endpoints ///
+
+app.get("/api/getFollowerCount/:USER", authenticateToken, getFollowerCount);
+// get user count endpoint
 
 app.get("/api/followUser/:USER", authenticateToken, followUser);
 // follow specified user endpoint
