@@ -8,6 +8,9 @@
         ; the information sent with the submit-query event is passed to the triggered function as an argument
         -->
     </div>
+    <div id="central-panel">
+        <homeFeed :feed="feed" />
+    </div>
     <div id="bottom-panel">
         <createPostForm class="createPostForm" :style="{visibility: createPost ? 'visible' : 'hidden'}" @submit-Post="createPostFunction"/>
         <createPostButton class="createPostButton" @create-post="showCreatePostForm" />
@@ -19,6 +22,7 @@
     import dropDownMenu from "../components/dropDownMenu";
     import createPostButton from "../components/createPostButton";
     import createPostForm from "../components/createPostForm";
+    import homeFeed from "../components/homeFeed";
     // importing necessary components
 
     export default {
@@ -28,6 +32,7 @@
             dropDownMenu,
             createPostButton,
             createPostForm,
+            homeFeed,
         },
         // defining components used
         data() {
@@ -36,10 +41,17 @@
                 profilePic: "",
                 users: [],
                 createPost: false,
+                feed: [],
             }
         },
         // component props are associated with vue data stored here and manipulated by methods (use props instead?)
         methods: {
+            getFeed() {
+                this.feed = [{ username: "user1", date: "20/10/2022", title: "monkeys", content: "I love monkeys" },
+                { username: "user2", date: "21/10/2022", title: "badgers", content: "I love badgers" },
+                { username: "user3", date: "22/10/2022", title: "lemurs", content: "I love lemurs" },
+                { username: "user4", date: "23/10/2022", title: "foxes", content: "I love foxes" }];
+            },
             async createPostFunction(post) {
                 try {
                     await fetch("http://localhost:3000/api/createPost", {
@@ -107,6 +119,7 @@
         },
         beforeMount() {
             this.getProfilePic();
+            this.getFeed();
         },
             // call functions on page load
     }
@@ -117,6 +130,11 @@
         position: relative;
         border-bottom: solid;
         top: 150px;
+    }
+
+    #central-panel {
+        position: relative;
+        top: 250px;
     }
 
     .dropDownMenu {
