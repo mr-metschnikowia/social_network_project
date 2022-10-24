@@ -1,7 +1,9 @@
 <template>
-    <LoginPortal 
-       @login-user="loginUser"
-     />
+    <div id="background-div">
+        <LoginPortal
+            @login-user="loginUser"
+         />
+    </div>
 </template>
 
 <script>
@@ -40,3 +42,12 @@ export default {
 }
 
 </script>
+
+<style scoped>
+    #background-div {
+        height: 720px;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        background-image: url(https://wallpaperaccess.com/full/1567665.png);
+    }
+</style>

@@ -1,14 +1,14 @@
 <template>
-    <div id="login_portal">
-        <h1>Login Portal</h1>
-        <img :src="img" />
-        <form id="login form">
-            Username: <input type="text" v-model="username" />
-            Password: <input type="text" v-model="password"/>
-        </form>
-        <button @click="submitLogin()">Login</button>
-        <router-link to="/register">Register</router-link>
-        <button v-on:click="changeImage()">Change photo</button>
+    <div>
+        <div id="login_portal">
+            <h1>Login Portal</h1>
+            <form id="login form">
+                Username: <input type="text" v-model="username" />
+                Password: <input type="text" v-model="password" />
+            </form>
+            <button @click="submitLogin()">Login</button>
+            <router-link class="register" to="/register">Register</router-link>
+        </div>
     </div>
 </template>
 
@@ -17,13 +17,11 @@ export default {
     name: "LoginPortal",
     data() {
         return {
-            img: 'https://picsum.photos/seed/${Math.random()}/500/300',
             username: "",
             password: "",
         }
     },
     methods: {
-        changeImage() { this.img = `https://picsum.photos/seed/${Math.random()}/500/300` },
         submitLogin() {
 
             if (!this.username) {
@@ -51,21 +49,41 @@ export default {
 </script>
 
 <style scoped>
-body {
-    text-align: center;
-}
+    body {
+        text-align: center;
+    }
 
-input {
-    margin: 10px;
-    padding: 10px;
-}
+    input {
+        margin: 30px 80px 5px 0px;
+        padding: 10px;
+    }
 
-button {
-    margin: 10px;
-    padding: 10px;
-}
+    button {
+        position: absolute;
+        width: 100px;
+        margin: 0px;
+        top: 260px;
+        left: 150px;
+        padding: 10px;
+    }
 
-img {
-    margin: 20px;
-}
+    #login_portal {
+        position: absolute;
+        border: solid;
+        color: darkblue;
+        margin: 7% 40% 0% 40%;
+        height: 400px;
+        width: 400px;
+    }
+
+    .register {
+        position: absolute;
+        top: 330px;
+        left: 170px;
+    }
+
+    div {
+        position: relative;
+        background-color: white;
+    }
 </style>

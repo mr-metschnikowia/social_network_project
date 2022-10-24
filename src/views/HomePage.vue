@@ -1,5 +1,6 @@
 <template>
-    <div id="top-panel">
+    <div id="top-panel">`
+        <logoutButton class="logoutButton"/>
         <profilePhoto class="miniProfile" :image="profilePic"
                       :username="username" />
         <dropDownMenu class="dropDownMenu" :users="users"
@@ -12,12 +13,18 @@
         <homeFeed :feed="feed" />
     </div>
     <div id="bottom-panel">
-        <createPostForm class="createPostForm" :style="{visibility: createPost ? 'visible' : 'hidden'}" @submit-Post="createPostFunction"/>
+        <createPostForm 
+            class="createPostForm" 
+            :style="{visibility: createPost ? 'visible' : 'hidden'}" 
+            @submit-Post="createPostFunction"
+            @cancel-create-post="cancelCreatePost"
+        />
         <createPostButton class="createPostButton" @create-post="showCreatePostForm" />
     </div>
 </template>
 
 <script>
+    import logoutButton from "../components/logoutButton";
     import profilePhoto from "../components/profilePhoto";
     import dropDownMenu from "../components/dropDownMenu";
     import createPostButton from "../components/createPostButton";
@@ -33,6 +40,7 @@
             createPostButton,
             createPostForm,
             homeFeed,
+            logoutButton,
         },
         // defining components used
         data() {
@@ -46,11 +54,13 @@
         },
         // component props are associated with vue data stored here and manipulated by methods (use props instead?)
         methods: {
-            getFeed() {
-                this.feed = [{ username: "user1", date: "20/10/2022", title: "monkeys", content: "I love monkeys" },
-                { username: "user2", date: "21/10/2022", title: "badgers", content: "I love badgers" },
-                { username: "user3", date: "22/10/2022", title: "lemurs", content: "I love lemurs" },
-                { username: "user4", date: "23/10/2022", title: "foxes", content: "I love foxes" }];
+            async getFeed() {
+                await fetch("http://localhost:3000/api/getFeed", {
+                    method: "GET",
+                    headers: { "Authorization": document.cookie },
+                })
+                    .then(res => res.json())
+                    .then(data => { this.feed = data })
             },
             async createPostFunction(post) {
                 try {
@@ -70,6 +80,9 @@
                     alert("Create post fetch request failed");
                 }
             },
+            cancelCreatePost() {
+                this.createPost = false;
+            },
             showCreatePostForm() {
                 this.createPost = true;
                 // show create post form
@@ -81,23 +94,29 @@
                         headers: { "Authorization": document.cookie },
                     })
                         .then(res => {
-
+                            /*
                             if (res.status === 401) {
                                 alert("user authentication failed");
                                 window.location.href = "http://localhost:8080/";
                             }
                             // if authentication fails then alert message and user is redirected back to the login page
+                            */
 
                             return res.json()
                             // otherwise extract response json data
                         })
+                        .catch((err) => {
+                            alert(err);
+                            document.cookie = "";
+                            window.location.href = "http://localhost:8080/";
+                            return false
+                        })
+                        // handle any issues with fetch request by sending alert, redirecting to login page and clearing browser cookies - this doesnt work yet
                         .then(data => {
                             this.username = data.username;
                             this.profilePic = data.photo;
                         })
-                        .catch(() => alert("unable to retrieve user data"))
-                    // change data based on json data
-
+                    // get user mini profile data from server
                 } catch (err) {
                     alert(err);
                 }
@@ -141,6 +160,7 @@
         position: absolute;
         left: 520px;
         top: -175px;
+        z-index: 10;
     }
 
     .miniProfile {
@@ -151,7 +171,6 @@
 
     #bottom-panel {
         position: relative;
-        top: 700px;
     }
 
     .createPostButton {
@@ -163,6 +182,14 @@
     .createPostForm {
         position: absolute;
         bottom: 50px;
-        left: 500px;
+        left: 510px;
+        z-index: 10;
+        background: #ffffff;
+    }
+
+    .logoutButton {
+        position: absolute;
+        top: -260px;
+        right: 0px;
     }
 </style>

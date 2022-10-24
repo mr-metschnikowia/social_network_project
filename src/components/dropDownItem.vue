@@ -3,8 +3,7 @@
 		<img class="dropDownItemComponent profilePhoto" :src="user.photo" />
 		<router-link 
 			:to="{ name: 'ProfilePage', params: { usernameProp: user.username }}"
-			class="dropDownItemComponent"
-		>
+			class="dropDownItemComponent">
 			{{user.username}}
 		</router-link>
 		<!--username is sent to profile page through router link-->

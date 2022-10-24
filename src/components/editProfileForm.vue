@@ -1,12 +1,13 @@
 <template>
 	<form id="edit-profile-form">
 		<h3>Profile photo</h3>
-		<input placeholder="url" class="form-input url" type="text" v-model="profilePhoto"/>
+		<input placeholder="url" class="form-input url" type="text" v-model="profilePhoto" />
 		<h3>Background photo</h3>
-		<input placeholder="url" class="form-input url" type="text" v-model="backgroundPhoto"/>
+		<input placeholder="url" class="form-input url" type="text" v-model="backgroundPhoto" />
 		<h3>About</h3>
-		<textarea id="about" class="form-input" v-model="about"/>
-		<button @click="updateProfile">Update profile</button>
+		<textarea id="about" class="form-input" v-model="about" />
+		<button class="update-profile-button" @click="updateProfile">Update profile</button>
+		<button class="cancel-update-profile-button" @click="cancelUpdateProfile">Cancel</button>
 	</form>
 </template>
 
@@ -29,6 +30,9 @@
 				}
 				
 				this.$emit("update-profile", newProfile);
+			},
+			cancelUpdateProfile() {
+				this.$emit("cancel-update-profile");
 			},
 		},
 	}
@@ -60,11 +64,19 @@
         height: 150px;
     }
 
-	button {
+    .update-profile-button {
         margin: 20px;
         padding: 15px;
         width: 120px;
-		position: absolute;
-		left: 290px;
+        position: absolute;
+        left: 290px;
+    }
+
+    .cancel-update-profile-button {
+        margin: 20px;
+        padding: 15px;
+        width: 120px;
+        position: absolute;
+        left: 150px;
     }
 </style>

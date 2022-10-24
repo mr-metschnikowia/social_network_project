@@ -25,6 +25,7 @@
         border: solid #1c4487;
         margin: auto;
         margin-bottom: 50px;
+        margin-left: 545px;
         width: 40%;
         min-height: 200px;
     }

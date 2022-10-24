@@ -19,4 +19,8 @@ export default {
         text-decoration: none;
         font-size: 35px;
     }
+
+    body {
+        background-color: darkblue;
+    }
 </style>

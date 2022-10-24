@@ -48,30 +48,29 @@ function generateAccessToken(username) {
 // function to generate JWT access token based on username and server's secret key, expires in 30min
 
 function authenticateToken(req, res, next) {
+    const cookie = req.headers['authorization'];
+    const startOfToken = cookie.indexOf("token") > -1 ? cookie.indexOf("token") + 6 : 0;
+    const endOfToken = cookie.indexOf("userProfile") > -1 ? cookie.indexOf("userProfile") : cookie.length;
+    const token = cookie.slice(startOfToken, endOfToken);
+    // extract JWT token from cookie
+
+    if (token.length < 1) {
+        res.status(401);
+    }
+    // handles cases when JWT access token is missing - other methods of handling this method failed
+
     try {
-        const cookie = req.headers['authorization'];
-        const startOfToken = cookie.indexOf("token") > -1 ? cookie.indexOf("token") + 6 : 0;
-        const endOfToken = cookie.indexOf("userProfile") > -1 ? cookie.indexOf("userProfile") : cookie.length;
-        const token = cookie.slice(startOfToken, endOfToken);
-        // extract JWT token from cookie
-
-        if (token.length < 1) {
-            return res.status(401);
-        }
-        // handles cases when JWT access token is missing - other methods of handling this method failed
-
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
         // verify access token 
-
         req.userTokenDeets = decoded;
         // attach decrypted username to request
 
-    } catch (err) {
-        console.log(err);
-        return res.status(401);
+        next();
+        // proceed to next middleware function
+    } catch (TokenExpiredError) {
+        res.status(401);
     }
-
-    next();
+    // handle jwt expired error
 }
 // JWT token authentication middleware
 
@@ -138,17 +137,18 @@ function getUsers(req, res, next) {
 function validatePost(reqBody, username) {
     if (!reqBody.title || reqBody.title.length < 1) {
         throw new Error("Post is missing title!");
-        //res.status(400).send("Post is missing title!");
-        //return
     // check post title
     } else if (!reqBody.content || reqBody.content.length < 1) {
         throw new Error("Post is missing content!");
-        //res.status(400).send("Post is missing content!");
         //return 
     }
     // check post content
+    else if (!reqBody.date) {
+        throw new Error("Post is missing date!");
+    }
+    // check post date
 
-    return { username: username, title: reqBody.title, content: reqBody.content }
+    return { username: username, title: reqBody.title, content: reqBody.content, date: reqBody.date }
     // return post object
 }
 // function checks if post is in correct format
@@ -201,6 +201,42 @@ async function getFollowerCount(req, res, next) {
 }
 // function counts number of documents in followers collection where following === username
 
+async function getFeed(req, res, next) {
+    const username = req.userTokenDeets.username;
+    const followingQuery = { user: username };
+    const followingDocuments = await client.db().collection("followers").find(followingQuery).toArray();
+    const followingUsers = followingDocuments.map(document => document.following);
+    // get all usernames of people that you are following
+    const posts = await client.db().collection("posts").find({ "username": { "$in": followingUsers } }).toArray();
+    // get posts from users that you follow
+    res.json(posts.reverse());
+    // send posts in json response in chronological order (latest first)
+    // error handling - if not following anyone or if followers have never made any posts
+}
+// function gets all posts of users that you follow in chronological order (most recent first)
+
+async function getFollowers(req, res, next) {
+    const username = req.params.USER;
+    const documents = await client.db().collection("followers").find({ following: username }).toArray();
+    const followers = documents.map(document => document.user);
+    // get all users who are following you
+    const profiles = await client.db().collection("profilePics").find({ "username": { "$in": followers } }).toArray();
+    // get follower profile info
+    res.json(profiles);
+}
+// function to get all followers of authenticating user
+
+async function getFollowing(req, res, next) {
+    const username = req.params.USER;
+    const documents = await client.db().collection("followers").find({ user: username }).toArray();
+    const following = documents.map(document => document.following);
+    // get all users who you are following
+    const profiles = await client.db().collection("profilePics").find({ "username": { "$in": following } }).toArray();
+    // get following profile info
+    res.json(profiles);
+}
+// function to get all users that user is following
+
 /// Endpoints ///
 
 app.get("/api/getFollowerCount/:USER", authenticateToken, getFollowerCount);
@@ -223,6 +259,15 @@ app.get("/api/getUsers/:QUERY", authenticateToken, getUsers);
 
 app.get("/api/getProfilePhoto", authenticateToken, getProfilePhoto);
 // get profile photo endpoint
+
+app.get("/api/getFeed", authenticateToken, getFeed);
+// get homepage feed endpoint
+
+app.get("/api/getFollowers/:USER", authenticateToken, getFollowers);
+// get followers endpoint
+
+app.get("/api/getFollowing/:USER", authenticateToken, getFollowing);
+// get following endpoint
 
 app.post("/api/authentication-test", authenticateToken, (req, res, next) => {
     res.send(`${req.userTokenDeets.username} authenticated successfully`);
