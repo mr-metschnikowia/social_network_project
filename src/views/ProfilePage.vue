@@ -135,6 +135,12 @@
                     // send cookie containing JWT web token in authorisation header 
                 })
                     .then(res => res.json())
+                    .catch(() => {
+                        alert("Please login again!");
+                        window.location.href = "http://localhost:8080/";
+                        return false
+                    })
+                    // handle errors including jwt expiration error
                     .then(data => {
                         this.profilePhoto = data.profilePhoto;
                         this.username = data.username;

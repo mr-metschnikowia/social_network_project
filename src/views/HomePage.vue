@@ -10,7 +10,8 @@
         -->
     </div>
     <div id="central-panel">
-        <homeFeed :feed="feed" />
+        <homeFeed :feed="feedSubset" />
+        <loadPostsButton @load-more-posts="loadMorePosts"/>
     </div>
     <div id="bottom-panel">
         <createPostForm 
@@ -30,6 +31,7 @@
     import createPostButton from "../components/createPostButton";
     import createPostForm from "../components/createPostForm";
     import homeFeed from "../components/homeFeed";
+    import loadPostsButton from "../components/loadPostsButton";
     // importing necessary components
 
     export default {
@@ -41,6 +43,7 @@
             createPostForm,
             homeFeed,
             logoutButton,
+            loadPostsButton,
         },
         // defining components used
         data() {
@@ -50,17 +53,26 @@
                 users: [],
                 createPost: false,
                 feed: [],
+                feedSubset: [],
+                // subset of posts from feed that are shown to user
             }
         },
         // component props are associated with vue data stored here and manipulated by methods (use props instead?)
         methods: {
+            loadMorePosts() {
+                this.feedSubset = this.feedSubset.concat(this.feed.slice(this.feedSubset.length, this.feedSubset.length + 3));
+            },
+            // load more posts function extends feedSubset to include more posts from feed array 
             async getFeed() {
                 await fetch("http://localhost:3000/api/getFeed", {
                     method: "GET",
                     headers: { "Authorization": document.cookie },
                 })
                     .then(res => res.json())
-                    .then(data => { this.feed = data })
+                    .then(data => {
+                        this.feed = data;
+                        this.feedSubset = data.slice(0, 3);
+                    })
             },
             async createPostFunction(post) {
                 try {
@@ -93,25 +105,13 @@
                         method: "GET",
                         headers: { "Authorization": document.cookie },
                     })
-                        .then(res => {
-                            /*
-                            if (res.status === 401) {
-                                alert("user authentication failed");
-                                window.location.href = "http://localhost:8080/";
-                            }
-                            // if authentication fails then alert message and user is redirected back to the login page
-                            */
-
-                            return res.json()
-                            // otherwise extract response json data
-                        })
-                        .catch((err) => {
-                            alert(err);
-                            document.cookie = "";
+                        .then(res => res.json())
+                        .catch(() => {
+                            alert("Please login again!");
                             window.location.href = "http://localhost:8080/";
                             return false
                         })
-                        // handle any issues with fetch request by sending alert, redirecting to login page and clearing browser cookies - this doesnt work yet
+                        // handle errors including jwt expiration error
                         .then(data => {
                             this.username = data.username;
                             this.profilePic = data.photo;
@@ -140,7 +140,7 @@
             this.getProfilePic();
             this.getFeed();
         },
-            // call functions on page load
+        // call functions on page load
     }
 </script>
 
@@ -148,48 +148,50 @@
     #top-panel {
         position: relative;
         border-bottom: solid;
-        top: 150px;
-    }
-
-    #central-panel {
-        position: relative;
-        top: 250px;
+        height: 150px;
     }
 
     .dropDownMenu {
         position: absolute;
         left: 520px;
-        top: -175px;
+        top: 0px;
         z-index: 10;
     }
 
     .miniProfile {
         position: absolute;
-        top: -230px;
+        top: -80px;
         left: 1500px;
+    }
+
+    .logoutButton {
+        position: absolute;
+        top: -110px;
+        right: 0px;
+    }
+
+    #central-panel {
+        position: relative;
+        margin-top: 100px;
     }
 
     #bottom-panel {
         position: relative;
+        height: 300px;
     }
 
     .createPostButton {
         position: absolute;
-        bottom: 50px;
+        top: 100px;
         right: 150px;
     }
 
     .createPostForm {
         position: absolute;
-        bottom: 50px;
+        bottom: 100%;
         left: 510px;
-        z-index: 10;
+        z-index: 20;
         background: #ffffff;
     }
 
-    .logoutButton {
-        position: absolute;
-        top: -260px;
-        right: 0px;
-    }
 </style>

@@ -43,9 +43,9 @@ const client = new MongoClient(url, { useUnifiedTopology: true });
 // use connection string to initialise new mongo client 
 
 function generateAccessToken(username) {
-    return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+    return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '2 days' });
 }
-// function to generate JWT access token based on username and server's secret key, expires in 30min
+// function to generate JWT access token based on username and server's secret key, expires in 2 days
 
 function authenticateToken(req, res, next) {
     const cookie = req.headers['authorization'];
@@ -59,18 +59,20 @@ function authenticateToken(req, res, next) {
     }
     // handles cases when JWT access token is missing - other methods of handling this method failed
 
-    try {
-        const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
-        // verify access token 
-        req.userTokenDeets = decoded;
-        // attach decrypted username to request
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+        // verify access token
+        if (err && err.name === "TokenExpiredError") {
+            console.log(`in the callback error block: ${err}`);
+            res.send("JWT expired!");
+        } else {
+            req.userTokenDeets = decoded;
+            // attach decrypted username to request
 
-        next();
-        // proceed to next middleware function
-    } catch (TokenExpiredError) {
-        res.status(401);
-    }
-    // handle jwt expired error
+            next();
+            // proceed to next middleware function
+        }
+    })
+    // asynchronous jwt verification (err first callback method?)
 }
 // JWT token authentication middleware
 
@@ -168,7 +170,7 @@ function getProfilePhoto(req, res, next) {
     client.db().collection('profilePics').findOne({ username: username })
         .then(doc => {
             if (doc === null) {
-                res.status(400).json({ username: "", photo: "" });
+                res.status(400).json({ username: "user", photo: "" });
             }
             else {
                 res.status(200).json(doc);
@@ -213,7 +215,7 @@ async function getFeed(req, res, next) {
     // send posts in json response in chronological order (latest first)
     // error handling - if not following anyone or if followers have never made any posts
 }
-// function gets all posts of users that you follow in chronological order (most recent first)
+// function gets most recent 6 posts of users that you follow in chronological order (most recent first)
 
 async function getFollowers(req, res, next) {
     const username = req.params.USER;
