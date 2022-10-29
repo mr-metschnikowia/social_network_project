@@ -7,7 +7,7 @@
 		name: "logoutButton",
 		methods: {
 			logOut() {
-				document.cookie = "";
+                document.cookie = "";
 				// this doesnt work - cookies are not deleted
 				window.location.href = "http://localhost:8080/";
 			}

@@ -37,8 +37,8 @@ export default {
             }
          })
          // handle response
-      }
-    }
+        },
+    },
 }
 
 </script>

@@ -42,7 +42,7 @@
 <style scoped>
     #follower-count {
         position: absolute;
-        right: 95px;
+        right: 50px;
         top: 40px;
         font-weight: bold;
         font-size: 15px;
@@ -51,8 +51,8 @@
 
     #follow-button {
         position: absolute;
-        right: 80px;
-        top: 100px;
+        right: 170px;
+        top: 40px;
         border: none;
         width: 120px;
         height: 50px;

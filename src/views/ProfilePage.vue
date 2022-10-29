@@ -116,7 +116,6 @@
             },
             createProfileCookie() {
                 if (this.usernameProp != undefined) {
-                    console.log(this.usernameProp);
                     const cookie = document.cookie;
                     const endOfToken = cookie.indexOf("userProfile") > -1 ? cookie.indexOf("userProfile") : cookie.length;
                     document.cookie = document.cookie.slice(0,endOfToken) + `userProfile=${this.usernameProp}`;

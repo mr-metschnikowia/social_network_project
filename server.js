@@ -56,6 +56,7 @@ function authenticateToken(req, res, next) {
 
     if (token.length < 1) {
         res.status(401);
+        return
     }
     // handles cases when JWT access token is missing - other methods of handling this method failed
 
